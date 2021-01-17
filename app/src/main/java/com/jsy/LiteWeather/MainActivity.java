@@ -10,9 +10,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,17 +25,15 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+
 
 public class MainActivity extends AppCompatActivity {
     AdView adView;
-
+    LinearLayout layout;
     TextView tvreg,tvtemp,tvcondi;
+
+
     // GpsTracker ↓
     private GpsTracker gpsTracker;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        layout = findViewById(R.id.layout);
         tvreg = findViewById(R.id.tvreg);
         tvtemp = findViewById(R.id.tvtemp);
         tvcondi = findViewById(R.id.tvcondi);
@@ -95,9 +97,49 @@ public class MainActivity extends AppCompatActivity {
                     String region = getWeather.getRegion();
                     tvreg.setText(region);
                     String weather = getWeather.getWeather();
-                    Log.i("temptest1",weather);
-                    if(weather.equals("Clear")){
-                        tvcondi.setText("Sunny");
+                    //Log.i("temptest1",weather);
+                    switch (weather){
+                        case "Clear":
+                            tvcondi.setText("Sunny");
+                            layout.setBackground(getDrawable(R.drawable.clear));
+                            break;
+                        case "Thunderstorm":
+                            tvcondi.setText("Thunderstorm");
+                            layout.setBackground(getDrawable(R.drawable.thundersorm));
+                            break;
+                        case "Drizzle":
+                            tvcondi.setText("Drizzle");
+                            layout.setBackground(getDrawable(R.drawable.drizzle));
+                            break;
+                        case "Rain":
+                            tvcondi.setText("Rain");
+                            layout.setBackground(getDrawable(R.drawable.rain));
+                            break;
+                        case "Snow":
+                            tvcondi.setText("Snow");
+                            layout.setBackground(getDrawable(R.drawable.snow));
+                            break;
+                        case "Atmosphere":
+                            tvcondi.setText("Atmosphere");
+                            layout.setBackground(getDrawable(R.drawable.atmosphere));
+                            break;
+                        case "Clouds":
+                            tvcondi.setText("Clouds");
+                            layout.setBackground(getDrawable(R.drawable.clouds));
+                            break;
+                        case "Mist":
+                            tvcondi.setText("Mist");
+                            layout.setBackground(getDrawable(R.drawable.mist));
+                            break;
+                        case "Dust":
+                            tvcondi.setText("Dust");
+                            layout.setBackground(getDrawable(R.drawable.dust));
+                            break;
+                        case "Haze":
+                            tvcondi.setText("Haze");
+                            layout.setBackground(getDrawable(R.drawable.haze));
+                            break;
+
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -105,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         t.start();
+
 
 
     }
