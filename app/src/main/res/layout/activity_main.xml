@@ -19,43 +19,32 @@
         ads:adUnitId="ca-app-pub-3940256099942544/6300978111"></com.google.android.gms.ads.AdView>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:orientation="vertical">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Busan"
             android:textSize="20dp"
             android:textColor="#ffffff"
-            android:layout_gravity="center"/>
+            android:gravity="center"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="clouds"
             android:textSize="40dp"
             android:textColor="#ffffff"
-            android:layout_gravity="center"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/temp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3"
-                android:textSize="40dp"
-                android:textColor="#ffffff"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="°"
-                android:textSize="40dp"
-                android:textColor="#ffffff"/>
-        </LinearLayout>
+            android:textSize="40dp"
+            android:textColor="#ffffff"
+            android:gravity="center"/>
     </LinearLayout>
 
     <LinearLayout

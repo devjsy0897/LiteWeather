@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -31,6 +32,7 @@ import java.net.URLEncoder;
 public class MainActivity extends AppCompatActivity {
     AdView adView;
 
+    TextView temp1;
     // GpsTracker ↓
     private GpsTracker gpsTracker;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        temp1 = findViewById(R.id.temp);
+
 
         // 광고 ↓
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -81,8 +86,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
+                GetWeather getWeather = new GetWeather();
                 try {
-                    weather(latitude,longitude);
+                    getWeather.weather(latitude,longitude);
+                    int temp = getWeather.getTemp();
+                    //Log.i("temptest1",temp+"");
+                    temp1.setText(temp+"°");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -93,35 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // 날씨 가져오기 통신
-    public void weather(double lat,double lon) throws IOException {
-            StringBuilder urlBuilder = new StringBuilder("http://api.openweathermap.org/data/2.5/weather"); /*URL*/
-            urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=" + URLEncoder.encode(lat+"", "UTF-8")); /*latitude*/
-            urlBuilder.append("&" + URLEncoder.encode("lon", "UTF-8") + "=" + URLEncoder.encode(lon + "", "UTF-8")); /*longitude*/
-            urlBuilder.append("&" + URLEncoder.encode("APPID", "UTF-8") + "=9e1362a69fea09a2cc6ac3de6124ed95"); /*API_KEY*/
-            urlBuilder.append("&" + URLEncoder.encode("units", "UTF-8") + "=metric"); /*API_KEY*/
 
-        URL url = new URL(urlBuilder.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-type", "application/json");
-        BufferedReader rd;
-        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-        }
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-        rd.close();
-        conn.disconnect();
-
-            Log.i("weathertest",sb.toString());
-        }
-    // 날씨 가져오기 통신
 
 
     // Gps ↓
