@@ -32,7 +32,7 @@ import java.net.URLEncoder;
 public class MainActivity extends AppCompatActivity {
     AdView adView;
 
-    TextView temp1;
+    TextView tvreg,tvtemp,tvcondi;
     // GpsTracker ↓
     private GpsTracker gpsTracker;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
@@ -45,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        temp1 = findViewById(R.id.temp);
-
+        tvreg = findViewById(R.id.tvreg);
+        tvtemp = findViewById(R.id.tvtemp);
+        tvcondi = findViewById(R.id.tvcondi);
 
         // 광고 ↓
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
@@ -90,8 +91,14 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     getWeather.weather(latitude,longitude);
                     int temp = getWeather.getTemp();
-                    //Log.i("temptest1",temp+"");
-                    temp1.setText(temp+"°");
+                    tvtemp.setText(temp+"°");
+                    String region = getWeather.getRegion();
+                    tvreg.setText(region);
+                    String weather = getWeather.getWeather();
+                    Log.i("temptest1",weather);
+                    if(weather.equals("Clear")){
+                        tvcondi.setText("Sunny");
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -14,9 +14,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 public class GetWeather {
-    private Context mContext;
     public static int temp;
-    public GetWeather(){}
+    public static String region;
+    public static String weather;
     // 날씨 가져오기 통신
     public void weather(double lat, double lon) throws IOException {
         StringBuilder urlBuilder = new StringBuilder("http://api.openweathermap.org/data/2.5/weather"); /*URL*/
@@ -53,15 +53,23 @@ public class GetWeather {
 
             JSONObject jObject = new JSONObject(data);
             JSONObject mainObject = jObject.getJSONObject("main");
-
             temp = mainObject.getInt("temp");
-
-            //Log.i("temptest",temp+"");
+            region = jObject.getString("name");
+            JSONArray weatherArray = jObject.getJSONArray("weather");
+            JSONObject weatherObject = weatherArray.getJSONObject(0);
+            weather = weatherObject.getString("main");
+            Log.i("temptest",weather+"");
         } catch (Exception e) {
             Log.i("mytag", e.getLocalizedMessage());
         }
     }
     public int getTemp(){
         return temp;
+    }
+    public  String getRegion(){
+        return region;
+    }
+    public  String getWeather(){
+        return weather;
     }
 }
