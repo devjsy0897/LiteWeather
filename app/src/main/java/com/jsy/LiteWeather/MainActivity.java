@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                             break;
 
                     }
+                    icon();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -156,12 +157,23 @@ public class MainActivity extends AppCompatActivity {
         t.start();
 
 
-
-
     }
 
-
-
+    public void icon(){
+        runOnUiThread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        String condition = (String)tvcondi.getText();
+                        
+                        switch (condition){
+                            case "Clouds":
+                                ivicon.setImageResource(R.drawable.icsunny);
+                        }
+                    }
+                }
+        );
+    }
 
     // Gps ↓
     /*
