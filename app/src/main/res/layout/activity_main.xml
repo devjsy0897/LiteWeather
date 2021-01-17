@@ -32,13 +32,10 @@
             android:textSize="20dp"
             android:textColor="#ffffff"
             android:gravity="center"/>
-        <TextView
-
+        <ImageView
+            android:id="@+id/ivicon"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="clouds"
-            android:textSize="40dp"
-            android:textColor="#ffffff"
+            android:layout_height="90dp"
             android:gravity="center"/>
         <TextView
             android:id="@+id/tvtemp"

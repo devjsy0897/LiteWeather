@@ -10,11 +10,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,11 +26,14 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 
 import java.io.IOException;
 
+import static com.jsy.LiteWeather.GetWeather.weather;
+
 
 public class MainActivity extends AppCompatActivity {
     AdView adView;
     LinearLayout layout;
     TextView tvreg,tvtemp,tvcondi;
+    ImageView ivicon;
 
 
     // GpsTracker ↓
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         tvreg = findViewById(R.id.tvreg);
         tvtemp = findViewById(R.id.tvtemp);
         tvcondi = findViewById(R.id.tvcondi);
-
+        ivicon = (ImageView)findViewById(R.id.ivicon);
         // 광고 ↓
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -102,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
                         case "Clear":
                             tvcondi.setText("Sunny");
                             layout.setBackground(getDrawable(R.drawable.clear));
+                            //ivicon.setImageResource(R.drawable.icsunny);
+
                             break;
                         case "Thunderstorm":
                             tvcondi.setText("Thunderstorm");
@@ -144,9 +148,13 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }
+
         });
+
         t.start();
+
 
 
 
