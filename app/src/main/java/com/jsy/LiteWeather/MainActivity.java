@@ -21,6 +21,13 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
 public class MainActivity extends AppCompatActivity {
     AdView adView;
 
@@ -64,16 +71,60 @@ public class MainActivity extends AppCompatActivity {
 
         gpsTracker = new GpsTracker(MainActivity.this);
 
-        double latitude = gpsTracker.getLatitude();
-        double longitude = gpsTracker.getLongitude();
-
-
+        final double latitude = gpsTracker.getLatitude();
+        final double longitude = gpsTracker.getLongitude();
 
         Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
+        // GpsTracker ↑
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    weather(latitude,longitude);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+
+
     }
 
+    // 날씨 가져오기 통신
+    public void weather(double lat,double lon) throws IOException {
+            StringBuilder urlBuilder = new StringBuilder("http://api.openweathermap.org/data/2.5/weather"); /*URL*/
+            urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=" + URLEncoder.encode(lat+"", "UTF-8")); /*latitude*/
+            urlBuilder.append("&" + URLEncoder.encode("lon", "UTF-8") + "=" + URLEncoder.encode(lon + "", "UTF-8")); /*longitude*/
+            urlBuilder.append("&" + URLEncoder.encode("APPID", "UTF-8") + "=9e1362a69fea09a2cc6ac3de6124ed95"); /*API_KEY*/
+            urlBuilder.append("&" + URLEncoder.encode("units", "UTF-8") + "=metric"); /*API_KEY*/
+
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+        BufferedReader rd;
+        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } else {
+            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+        }
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = rd.readLine()) != null) {
+            sb.append(line);
+        }
+        rd.close();
+        conn.disconnect();
+
+            Log.i("weathertest",sb.toString());
+        }
+    // 날씨 가져오기 통신
 
 
+    // Gps ↓
     /*
      * ActivityCompat.requestPermissions를 사용한 퍼미션 요청의 결과를 리턴받는 메소드입니다.
      */
@@ -223,7 +274,9 @@ public class MainActivity extends AppCompatActivity {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
-    // GpsTracker ↑
+    // Gps ↑
+
+
 
 }
 
