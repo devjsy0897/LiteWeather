@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivicon;
 
 
+
     // GpsTracker ↓
     private GpsTracker gpsTracker;
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
@@ -53,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         tvtemp = findViewById(R.id.tvtemp);
         tvcondi = findViewById(R.id.tvcondi);
         ivicon = (ImageView)findViewById(R.id.ivicon);
-        // 광고 ↓
+
+        //광고↓
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -63,12 +65,13 @@ public class MainActivity extends AppCompatActivity {
         adView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
-        // 광고 ↑
+        //광고↑
 
         // GpsTracker ↓
         if (!checkLocationServicesStatus()) {
 
             showDialogForLocationServiceSetting();
+
         }else {
 
             checkRunTimePermission();
@@ -82,9 +85,10 @@ public class MainActivity extends AppCompatActivity {
         gpsTracker = new GpsTracker(MainActivity.this);
 
         final double latitude = gpsTracker.getLatitude();
+
         final double longitude = gpsTracker.getLongitude();
 
-        Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
+        //Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
         // GpsTracker ↑
 
         Thread t = new Thread(new Runnable() {
@@ -95,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     getWeather.weather(latitude,longitude);
                     int temp = getWeather.getTemp();
-                    tvtemp.setText(temp+"°");
+                    //tvtemp.setText(temp+"°");
+                    tvtemp.setText("25°");
                     String region = getWeather.getRegion();
                     tvreg.setText(region);
                     String weather = getWeather.getWeather();
@@ -104,8 +109,6 @@ public class MainActivity extends AppCompatActivity {
                         case "Clear":
                             tvcondi.setText("Sunny");
                             layout.setBackground(getDrawable(R.drawable.clear));
-                            //ivicon.setImageResource(R.drawable.icsunny);
-
                             break;
                         case "Thunderstorm":
                             tvcondi.setText("Thunderstorm");
@@ -123,10 +126,6 @@ public class MainActivity extends AppCompatActivity {
                             tvcondi.setText("Snow");
                             layout.setBackground(getDrawable(R.drawable.snow));
                             break;
-                        case "Atmosphere":
-                            tvcondi.setText("Atmosphere");
-                            layout.setBackground(getDrawable(R.drawable.atmosphere));
-                            break;
                         case "Clouds":
                             tvcondi.setText("Clouds");
                             layout.setBackground(getDrawable(R.drawable.clouds));
@@ -143,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
                             tvcondi.setText("Haze");
                             layout.setBackground(getDrawable(R.drawable.haze));
                             break;
-
+                        default:
+                            tvcondi.setText(weather);
+                            layout.setBackground(getDrawable(R.drawable.snow));
                     }
                     icon();
                 } catch (IOException e) {
@@ -155,8 +156,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         t.start();
-
-
     }
 
     public void icon(){
@@ -165,11 +164,33 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         String condition = (String)tvcondi.getText();
-                        
+
                         switch (condition){
+                            case "Sunny":
+                                ivicon.setImageResource(R.drawable.ic_sunny);
+                                break;
+                            case "Thunderstorm":
+                                ivicon.setImageResource(R.drawable.ic_thunder);
+                                break;
+                            case "Drizzle":
+                            case "Rain":
+                            case "Mist":
+                                ivicon.setImageResource(R.drawable.ic_rain);
+                                break;
+                            case "Snow":
+                                ivicon.setImageResource(R.drawable.ic_snow);
+                                break;
                             case "Clouds":
-                                ivicon.setImageResource(R.drawable.icsunny);
+                                ivicon.setImageResource(R.drawable.ic_cloud);
+                                break;
+                            case "Dust":
+                            case "Haze":
+                                ivicon.setImageResource(R.drawable.ic_hail);
+                                break;
+                            default:
+                                break;
                         }
+
                     }
                 }
         );
@@ -238,7 +259,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED &&
                 hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
-
             // 2. 이미 퍼미션을 가지고 있다면
             // ( 안드로이드 6.0 이하 버전은 런타임 퍼미션이 필요없기 때문에 이미 허용된 걸로 인식합니다.)
 
@@ -248,12 +268,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         } else {  //2. 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요합니다. 2가지 경우(3-1, 4-1)가 있습니다.
-
             // 3-1. 사용자가 퍼미션 거부를 한 적이 있는 경우에는
             if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[0])) {
-
                 // 3-2. 요청을 진행하기 전에 사용자가에게 퍼미션이 필요한 이유를 설명해줄 필요가 있습니다.
-                Toast.makeText(MainActivity.this, "이 앱을 실행하려면 위치 접근 권한이 필요합니다.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "위치 권한 허용 후 어플을 다시 시작해 주세요", Toast.LENGTH_LONG).show();
                 // 3-3. 사용자게에 퍼미션 요청을 합니다. 요청 결과는 onRequestPermissionResult에서 수신됩니다.
                 ActivityCompat.requestPermissions(MainActivity.this, REQUIRED_PERMISSIONS,
                         PERMISSIONS_REQUEST_CODE);
@@ -285,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent callGPSSettingIntent
                         = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivityForResult(callGPSSettingIntent, GPS_ENABLE_REQUEST_CODE);
+
             }
         });
         builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
@@ -309,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
                 if (checkLocationServicesStatus()) {
                     if (checkLocationServicesStatus()) {
 
-                        Log.d("@@@", "onActivityResult : GPS 활성화 되있음");
+                        //Log.d("@@@", "onActivityResult : GPS 활성화 되있음");
                         checkRunTimePermission();
                         return;
                     }
